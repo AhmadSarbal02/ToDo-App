@@ -1,0 +1,3 @@
+arb-dir: lib/l10n #يحدد مكان ملفات .arb.
+template-arb-file: app_en.arb #يحدد الملف الرئيسي للتعريب (بالإنجليزية).
+output-localization-file: app_localizations.dart #يحدد اسم ملف الترجمة المولّد.
