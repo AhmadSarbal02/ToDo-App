@@ -10,13 +10,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
 class LoginPageScreen extends StatelessWidget {
-  const LoginPageScreen({super.key});
+  GlobalKey<FormState> formKey = GlobalKey();
+  LoginPageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     Logincontrollerr logincontrollerr =
         Provider.of<Logincontrollerr>(context, listen: false);
-    GlobalKey<FormState> formKey = GlobalKey();
 
     return Scaffold(
       appBar: PreferredSize(
@@ -55,14 +55,6 @@ class LoginPageScreen extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   gradient: Constant.gradient,
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     // ignore: deprecated_member_use
-                  //     color: Colors.blue.shade900.withOpacity(0.5),
-                  //     offset: const Offset(4, 4),
-                  //     blurRadius: 8,
-                  //   )
-                  // ],
                   borderRadius: BorderRadius.circular(20),
                 ),
                 width: 320,
@@ -167,19 +159,35 @@ class LoginPageScreen extends StatelessWidget {
                                   logincontrollerr.passcontroller!.text,
                                 );
                               }
-                              logincontrollerr.checkUser(
+                              bool isUser = await logincontrollerr.checkUser(
                                 email: logincontrollerr.emailcontroller!.text,
                                 password: logincontrollerr.passcontroller!.text,
                               );
 
-                              if (logincontrollerr.isUser!) {
+                              if (isUser) {
+                                await logincontrollerr.getUser(
+                                  email: logincontrollerr.emailcontroller!.text,
+                                  password:
+                                      logincontrollerr.passcontroller!.text,
+                                );
+
+                                if (logincontrollerr.userModel != null) {
+                                  // ignore: avoid_print
+                                  print(
+                                      "============================== تم ارسال الاي دي يوزر الى الجيت تاسك ");
+                                } else {
+                                  // ignore: avoid_print
+                                  print("⚠️ تحذير: userModel لا يزال null");
+                                }
                                 Navigator.pushReplacement(
+                                  // ignore: use_build_context_synchronously
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           BottomNavigationScreen()),
                                 );
                               } else {
+                                // ignore: use_build_context_synchronously
                                 logincontrollerr.showNotUserDialog(context);
                               }
                             }

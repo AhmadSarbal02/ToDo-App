@@ -1,5 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:todo/controller/sqflite_db.dart';
+import 'package:todo/view/screens/login_screen.dart';
+import 'package:todo/view/widgets/custom_alert_dialog_widget.dart';
+import '../model/user_model.dart';
 
 class SignUpcontrollerr extends ChangeNotifier {
   SqfliteDb sqfliteDb = SqfliteDb();
@@ -8,19 +13,39 @@ class SignUpcontrollerr extends ChangeNotifier {
   bool obscureText = true;
   bool isEmpty = false;
   bool isLong = false;
+  UserModel? userModel;
 
   signUp(
       {required String email,
       required String password,
       required String name}) async {
-    int response = await sqfliteDb.insertData(
+    try {
+      int response = await sqfliteDb.insertData(
+          sql:
+              "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
+
+      print(
+          "$response====================signUp Reeesponse================================================================================");
+      return response;
+    } catch (e) {
+      print(
+          '====================================================================================================Error inserting data: $e');
+      return -1; // تم التعامل مع الخطأ
+    }
+  }
+
+  getUser({required String email, required String password}) async {
+    List<Map> response = await sqfliteDb.getData(
         sql:
-            "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
-    // ignore: avoid_print
-    print(
-        "$response====================signUp Reeesponse==============================");
-    notifyListeners();
-    return response;
+            "SELECT * FROM users WHERE email = '$email' AND password = '$password' LIMIT 1");
+    if (response.isNotEmpty) {
+      for (Map i in response) {
+        userModel = (UserModel.fromJson(json: i));
+      }
+      // بيانات المستخدم موجودة
+      return true;
+    }
+    return false;
   }
 
   checkEmpty({required String val}) {
@@ -59,13 +84,33 @@ class SignUpcontrollerr extends ChangeNotifier {
 
   //Make Sure Same Password (confirm Password)
   bool isSamePassword(String pass1, String pass2) {
-    bool x;
-    pass2 == pass1 ? x = true : x = false;
-    return x;
+    return pass1 == pass2;
   }
 
   changeOpscureTextPassword() {
     obscureText = !obscureText;
     notifyListeners();
+  }
+
+  showSignUpDoneDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialogWidget(
+          title: "Sign Up Done",
+          backgroundColor: Colors.green,
+          text1: "Ok",
+          onPressed1: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginPageScreen(),
+                ));
+          },
+          text2: "",
+          onPressed2: () {},
+        );
+      },
+    );
   }
 }

@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/model/task_model.dart';
+import 'package:todo/model/user_model.dart';
 
 // ignore: depend_on_referenced_packages
 
@@ -9,80 +12,125 @@ import 'sqflite_db.dart';
 
 class TaskController extends ChangeNotifier {
   SqfliteDb sqfliteDb = SqfliteDb();
+  UserModel? userModel;
 
   List<TaskModel> listTasks = [];
   List<TaskModel> listDoneTasks = [];
   List<TaskModel> listArciveTask = [];
 
-  getAllTasks() async {
+  getAllTasks({required int userId}) async {
     listTasks = [];
-    List<Map> listData = await sqfliteDb.getData(
-        sql: 'SELECT * FROM task WHERE done = 0 AND archive = 0');
-    for (Map i in listData) {
-      listTasks.add(TaskModel.fromjson(json: i));
+    userId = userModel!.id;
+    print(
+        "============================= userModel in Task controller = ${userModel!.email}");
+    print("============================= userId in Task controller = $userId");
+    try {
+      List<Map> listData = await sqfliteDb.getData(
+          sql:
+              'SELECT * FROM task WHERE user_id = $userId AND done = 0 AND archive = 0');
+      if (listData.isNotEmpty) {
+        for (Map i in listData) {
+          listTasks.add(TaskModel.fromjson(json: i));
+        }
+      } else {
+        print(
+            " ================================= ⚠️ لم يتم العثور على مهام للمستخدم $userId");
+      }
+      notifyListeners();
+    } catch (e) {
+      print(" ====================== Error get tasks $e");
     }
-    notifyListeners();
   }
 
-  getDoneTask() async {
+  getDoneTask({required int userId}) async {
     listDoneTasks = [];
-    List<Map> listData =
-        await sqfliteDb.getData(sql: 'SELECT * FROM task WHERE done = 1');
-    for (Map i in listData) {
-      listDoneTasks.add(TaskModel.fromjson(json: i));
+    try {
+      List<Map> listData = await sqfliteDb.getData(
+          sql: 'SELECT * FROM task WHERE user_id = $userId AND done = 1');
+
+      for (Map i in listData) {
+        listDoneTasks.add(TaskModel.fromjson(json: i));
+      }
+    } catch (e) {
+      print("================== $e");
     }
+
     notifyListeners();
   }
 
-  getArchiveTask() async {
+  getArchiveTask({required int userId}) async {
     listArciveTask = [];
-    List<Map> listData =
-        await sqfliteDb.getData(sql: 'SELECT * FROM task WHERE archive = 1');
+    List<Map> listData = await sqfliteDb.getData(
+        sql: 'SELECT * FROM task WHERE user_id = $userId AND archive = 1');
     for (Map i in listData) {
       listArciveTask.add(TaskModel.fromjson(json: i));
     }
+
     notifyListeners();
   }
 
   insertTask({required String msg}) async {
-    await sqfliteDb.insertData(
-        sql:
-            'INSERT INTO task (msg, done, archive) VALUES ("$msg", FALSE, FALSE)');
-    getAllTasks();
-  }
+    try {
+      int userId = userModel!.id; // احصل على userId من المستخدم الحالي
 
-  updateTask({required String msg, required int id}) async {
-    await sqfliteDb.updateData(
-        sql: 'Update task SET msg = "$msg" Where id ="$id"');
-    getAllTasks();
+      print("🔍 إدراج مهمة جديدة للمستخدم: $userId - الرسالة: $msg");
+
+      await sqfliteDb.insertData(
+          sql:
+              'INSERT INTO task (user_id, msg, done, archive) VALUES ($userId, "$msg", 0, 0)');
+
+      print("✅ تمت إضافة المهمة بنجاح!");
+    } catch (e) {
+      print("❌ خطأ أثناء إضافة المهمة: $e");
+    }
+    getAllTasks(userId: userModel!.id);
     notifyListeners();
   }
 
-  updateTaskToDone({required bool done, required int id}) async {
+  updateTask(
+      {required String msg, required int id, required int userId}) async {
     await sqfliteDb.updateData(
         sql:
-            'Update task SET done = ${!done ? 1 : 0}, archive = 0 Where id ="$id"');
-    await getDoneTask();
-    await getAllTasks();
-    await getArchiveTask();
+            'Update task SET msg = "$msg" Where id =$id AND user_id = $userId');
+    getAllTasks(userId: userId);
+    getDoneTask(userId: userId);
+    getArchiveTask(userId: userId);
     notifyListeners();
   }
 
-  updateTaskToArchive({required bool archive, required int id}) async {
-    await sqfliteDb.updateData(
-        sql:
-            'UPDATE task SET archive = ${!archive ? 1 : 0}, done = 0 WHERE id = "$id"');
-    await getDoneTask();
-    await getAllTasks();
-    await getArchiveTask();
+  updateTaskToDone(
+      {required bool done, required int id, required int userId}) async {
+    try {
+      await sqfliteDb.updateData(
+          sql:
+              'Update task SET done = ${!done ? 1 : 0}, archive = 0 Where id = $id AND user_id = $userId');
+    } catch (e) {
+      print("====================== updateTaskToDone error = $e");
+    }
+    getAllTasks(userId: userId);
+    getDoneTask(userId: userId);
+    getArchiveTask(userId: userId);
     notifyListeners();
   }
 
-  deleteTask({required int id}) async {
-    await sqfliteDb.deleteData(sql: 'DELETE FROM task WHERE id = "$id"');
-    await getDoneTask();
-    await getAllTasks();
-    await getArchiveTask();
+  updateTaskToArchive(
+      {required bool archive, required int id, required int userId}) async {
+    await sqfliteDb.updateData(
+        sql:
+            'UPDATE task SET archive = ${!archive ? 1 : 0}, done = 0 WHERE id = $id AND user_id = $userId');
+    getAllTasks(userId: userId);
+    getDoneTask(userId: userId);
+    getArchiveTask(userId: userId);
+    notifyListeners();
+  }
+
+  deleteTask({required int id, required int userId}) async {
+    await sqfliteDb.deleteData(
+        sql: 'DELETE FROM task WHERE id = $id AND user_id = $userId');
+    getAllTasks(userId: userId);
+    getDoneTask(userId: userId);
+    getArchiveTask(userId: userId);
+    notifyListeners();
   }
 
   showAddTaskDialog(BuildContext context) async {
@@ -103,7 +151,8 @@ class TaskController extends ChangeNotifier {
     );
   }
 
-  showUpdateTaskDialog(BuildContext context, TaskModel taskmodel) async {
+  showUpdateTaskDialog(BuildContext context, TaskModel taskmodel,
+      {required int userId}) async {
     TextEditingController? controller = TextEditingController();
     controller.text = taskmodel.msg!;
     return showDialog(
@@ -113,8 +162,8 @@ class TaskController extends ChangeNotifier {
             title: "Update Task",
             controller: controller,
             onSubmit: () {
-              Provider.of<TaskController>(context, listen: false)
-                  .updateTask(msg: controller.text, id: taskmodel.id!);
+              Provider.of<TaskController>(context, listen: false).updateTask(
+                  msg: controller.text, id: taskmodel.id!, userId: userId);
               Navigator.of(context).pop();
             });
       },

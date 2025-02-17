@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:sqflite/sqflite.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
@@ -35,7 +37,6 @@ class SqfliteDb {
   }
 
   _onUpgrade(Database db, int oldversion, int newversion) {
-    // ignore: avoid_print
     print("_onUpgrade======================================================");
   }
 
@@ -51,10 +52,19 @@ class SqfliteDb {
       )
     ''');
 
-    await db.execute(
-        'CREATE TABLE task (id INTEGER PRIMARY KEY, msg TEXT, done BOOLEAN, archive BOOLEAN)');
+    // ربطالمهام بجدول اليوزر من خلال الفورين كي
+    // on delete cascade  هاي عند حذف اليوزر يتمحذف كل المهام المرتبطه به
+    await db.execute('''
+      CREATE TABLE task (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        msg TEXT,
+        done INTEGER DEFAULT 0,
+        archive INTEGER DEFAULT 0,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )
+    ''');
 
-    // ignore: avoid_print
     print(
         "Created users tabel ============================================================================================= ");
   }
@@ -65,6 +75,7 @@ class SqfliteDb {
     Database? mydb = await db;
     // رو كويري بترجعلي ليست , شوف بعينك وتأكد , عشان هيك حطيت الريسبونس من نوع ليست اوف ماب
     List<Map> response = await mydb!.rawQuery(sql);
+
     return response;
   }
 
@@ -73,18 +84,21 @@ class SqfliteDb {
     //رو انسيريت بترجعلي صفر او قيمة الرو المضاف , برضو شوف وتأكد بعينك , عشان هيك الريسبونس نوعه انتيجر
     //بترجع صفر اذا فشلت العملية ونفس الاشي الابديت والديليت
     int response = await mydb!.rawInsert(sql);
+    print("================================ insert task reeeespons $response");
     return response;
   }
 
   updateData({required String sql}) async {
     Database? mydb = await db;
     int response = await mydb!.rawUpdate(sql);
+    print("============================ updateData Response = $response");
     return response;
   }
 
   deleteData({required String sql}) async {
     Database? mydb = await db;
     int response = await mydb!.rawDelete(sql);
+    print("============================ deleteData Response = $response");
     return response;
   }
 

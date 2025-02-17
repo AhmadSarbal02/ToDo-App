@@ -1,26 +1,25 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo/view/screens/bottom_navigation_screen.dart';
 import 'package:todo/view/screens/login_screen.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../controller/sign_up_controller.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custominput.dart';
 
 // ignore: must_be_immutable
 class SignUpScreen extends StatelessWidget {
-  TextEditingController? namecontroller = TextEditingController();
-  TextEditingController? emailcontroller = TextEditingController();
-  TextEditingController? passcontroller = TextEditingController();
-  TextEditingController? pass2controller = TextEditingController();
+  TextEditingController namecontroller = TextEditingController();
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController passcontroller = TextEditingController();
+  TextEditingController pass2controller = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<FormState> formKey = GlobalKey();
-
     return Scaffold(
       backgroundColor: Colors.white, // نفس لون خلفية صفحة تسجيل الدخول
       appBar: PreferredSize(
@@ -212,7 +211,7 @@ class SignUpScreen extends StatelessWidget {
                             //signUpcontrollerr.pass2controller!.text = val!;
 
                             if (!signUpcontrollerr.isSamePassword(
-                                passcontroller!.text, val)) {
+                                passcontroller.text, val)) {
                               return AppLocalizations.of(context)!
                                   .notmatchpassword;
                             }
@@ -230,24 +229,26 @@ class SignUpScreen extends StatelessWidget {
                             CustomButton(
                           title: AppLocalizations.of(context)!.signup,
                           icon: Icons.login,
-                          onTap: () {
+                          onTap: () async {
                             if (formKey.currentState!.validate()) {
-                              int signUp = signUpcontrollerr.signUp(
-                                  email: emailcontroller!.text,
-                                  password: passcontroller!.text,
-                                  name: namecontroller!.text);
+                              int signUp = await signUpcontrollerr.signUp(
+                                  email: emailcontroller.text,
+                                  password: passcontroller.text,
+                                  name: namecontroller.text);
+
+                              // ignore: avoid_print
+                              print(
+                                  "================================================================================================================SignUp result: $signUp");
                               // ignore: unrelated_type_equality_checks
                               if (signUp == 0) {
                                 // ignore: avoid_print
                                 print(
                                     "فششششششششششششششششششششششششششششششششششششششششششششششششششششششششششششششششل انشاااااااااااااااااااااااء حسااااااااااااااااااااااااب");
                               } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BottomNavigationScreen(),
-                                    ));
+                                await signUpcontrollerr.getUser(
+                                    email: emailcontroller.text,
+                                    password: passcontroller.text);
+                                signUpcontrollerr.showSignUpDoneDialog(context);
                               }
                             }
                           },

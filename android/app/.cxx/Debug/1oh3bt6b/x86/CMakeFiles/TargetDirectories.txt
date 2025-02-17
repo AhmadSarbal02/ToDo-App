@@ -1,0 +1,2 @@
+C:/src/abdallah_mansor/todo/ToDo-App/android/app/.cxx/Debug/1oh3bt6b/x86/CMakeFiles/edit_cache.dir
+C:/src/abdallah_mansor/todo/ToDo-App/android/app/.cxx/Debug/1oh3bt6b/x86/CMakeFiles/rebuild_cache.dir

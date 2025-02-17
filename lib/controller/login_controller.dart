@@ -1,12 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo/controller/sqflite_db.dart';
 import '../model/user_model.dart';
-import '../view/widgets/alert_errorlogin_widget.dart';
+import '../view/widgets/custom_alert_dialog_widget.dart';
 
 class Logincontrollerr extends ChangeNotifier {
   SqfliteDb sqfliteDb = SqfliteDb();
-  List<UserModel>? usersList;
+  UserModel? userModel;
   TextEditingController? emailcontroller = TextEditingController();
   TextEditingController? passcontroller = TextEditingController();
   bool isEmailText = true;
@@ -14,12 +16,11 @@ class Logincontrollerr extends ChangeNotifier {
   bool obscureText = true;
   bool rememberMe = false;
   bool isEmpty = false;
-  bool? isUser;
 
   Logincontrollerr() {
     // تحميل البيانات من SharedPreferences عند الإنشاء
     getData();
-    getAllUesrs();
+    // getUser(email: emailcontroller!.text, password: passcontroller!.text);
   }
 
   checkEmpty({required String val}) {
@@ -71,25 +72,47 @@ class Logincontrollerr extends ChangeNotifier {
     notifyListeners();
   }
 
-  getAllUesrs() async {
-    usersList = [];
-    List<Map> response = await sqfliteDb.getData(sql: "SELECT * FROM users");
-    for (Map i in response) {
-      usersList!.add(UserModel.fromJson(json: i));
+  Future<void> getUser(
+      {required String email, required String password}) async {
+    try {
+      List<Map> response = await sqfliteDb.getData(
+        sql:
+            "SELECT * FROM users WHERE email = '$email' AND password = '$password' LIMIT 1",
+      );
+      print(
+          "$response ======================================== get user response");
+      for (Map i in response) {
+        userModel = UserModel.fromJson(json: i);
+        print("✅ نجاح: تم العثور على المستخدم!");
+        print("======================== ${userModel!.email}");
+      }
+    } catch (e) {
+      print("❌ خطأ أثناء جلب المستخدم: $e");
+      userModel = null;
     }
+
     notifyListeners();
   }
 
-  checkUser({required String email, required String password}) async {
-    isUser = await sqfliteDb.loginUser(email: email, password: password);
-    return isUser;
+  Future<bool> checkUser(
+      {required String email, required String password}) async {
+    return await sqfliteDb.loginUser(email: email, password: password);
   }
 
   showNotUserDialog(BuildContext context) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertErrorloginWidget();
+        return CustomAlertDialogWidget(
+          title: "User Not Found",
+          backgroundColor: Colors.red,
+          text1: "Ok",
+          onPressed1: () {
+            Navigator.pop(context);
+          },
+          text2: "",
+          onPressed2: () {},
+        );
       },
     );
   }

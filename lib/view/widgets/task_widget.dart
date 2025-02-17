@@ -1,7 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/constant.dart';
 import 'package:todo/model/task_model.dart';
+
 import '../../controller/task_controller.dart';
 
 class TaskWidget extends StatelessWidget {
@@ -28,14 +31,14 @@ class TaskWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(6.0),
+          padding: const EdgeInsets.all(4),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
               // رسالة المهمة
               Text(
-                taskModel.msg!,
+                taskModel.msg ?? "No message", // تأكد من أن الرسالة ليست null
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -56,9 +59,13 @@ class TaskWidget extends StatelessWidget {
                     color: taskModel.done == true ? Colors.green : Colors.white,
                     onPressed: () async {
                       await taskController.updateTaskToDone(
+                        userId: taskController.userModel!.id,
                         done: taskModel.done!,
                         id: taskModel.id!,
                       );
+
+                      print(
+                          " =========================== OnPressd Done ${taskController.userModel!.id}");
                     },
                     splashRadius: 24,
                   ),
@@ -73,9 +80,12 @@ class TaskWidget extends StatelessWidget {
                         taskModel.archive == true ? Colors.amber : Colors.white,
                     onPressed: () async {
                       await taskController.updateTaskToArchive(
+                        userId: taskController.userModel!.id,
                         id: taskModel.id!,
                         archive: taskModel.archive!,
                       );
+                      print(
+                          " =========================== OnPressd Archive ${taskController.userModel!.id}");
                     },
                     splashRadius: 24,
                   ),
@@ -86,7 +96,11 @@ class TaskWidget extends StatelessWidget {
                     ),
                     color: Colors.redAccent,
                     onPressed: () {
-                      taskController.deleteTask(id: taskModel.id!);
+                      taskController.deleteTask(
+                          userId: taskController.userModel!.id,
+                          id: taskModel.id!);
+                      print(
+                          " =========================== OnPressd Delete ${taskController.userModel!.id}");
                     },
                     splashRadius: 24,
                   ),

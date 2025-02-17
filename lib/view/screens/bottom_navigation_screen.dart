@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:todo/view/screens/login_screen.dart';
+import 'package:todo/view/widgets/custom_alert_dialog_widget.dart';
 import '../../controller/locale_controller.dart';
 import 'archive_task_screen.dart';
 import 'done_tasks_screen.dart';
@@ -32,6 +35,43 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     ];
 
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(children: [
+          DrawerHeader(
+            padding: EdgeInsets.all(0),
+            margin: EdgeInsets.all(0),
+            child: Container(
+              color: const Color.fromARGB(255, 197, 171, 161),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.language),
+            title: Text("Language"),
+            subtitle: Text("Choose your Language"),
+            // trailing: Icon(Icons.login_outlined),
+            onTap: () {
+              showSignUpDoneDialog(context);
+
+              setState(() {});
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text("LogOut"),
+            subtitle: Text("Cart Sub title"),
+            onTap: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LoginPageScreen()));
+              setState(() {});
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text("About Me"),
+            subtitle: Text("More info about developer team"),
+          ),
+        ]),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
@@ -87,6 +127,30 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                 icon: const Icon(Icons.archive_outlined),
                 label: AppLocalizations.of(context)!.archive),
           ]),
+    );
+  }
+
+  showSignUpDoneDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialogWidget(
+          title: "Choose Your Language",
+          backgroundColor: Colors.green,
+          text1: AppLocalizations.of(context)!.en,
+          onPressed1: () {
+            Provider.of<LocaleController>(context, listen: false)
+                .changeLang(langCode: "en");
+            Navigator.pop(context);
+          },
+          text2: AppLocalizations.of(context)!.ar,
+          onPressed2: () {
+            Provider.of<LocaleController>(context, listen: false)
+                .changeLang(langCode: "ar");
+            Navigator.pop(context);
+          },
+        );
+      },
     );
   }
 }

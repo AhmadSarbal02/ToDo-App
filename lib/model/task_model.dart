@@ -23,28 +23,3 @@ class TaskModel {
     userId = json["userId"];
   }
 }
-
-// class TaskModel {
-//   final int id;
-//   final int userId;
-//   final String msg;
-//   final bool done;
-//   final bool archive;
-
-//   TaskModel(
-//       {required this.id,
-//       required this.userId,
-//       required this.msg,
-//       required this.done,
-//       required this.archive});
-
-//   factory TaskModel.fromJson(Map<String, dynamic> json) {
-//     return TaskModel(
-//       id: json['id'],
-//       userId: json['userId'],
-//       msg: json['msg'],
-//       done: json['done'] == 1,
-//       archive: json['archive'] == 1,
-//     );
-//   }
-// }

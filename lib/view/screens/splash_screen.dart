@@ -1,11 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo/controller/login_controller.dart';
-
 import '../../controller/sqflite_db.dart';
-import '../../controller/task_controller.dart';
 import 'lang_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,14 +18,6 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(Duration(seconds: 3), () {
-      TaskController taskController =
-          Provider.of<TaskController>(context, listen: false);
-      Logincontrollerr logincontrollerr =
-          Provider.of<Logincontrollerr>(context, listen: false);
-      logincontrollerr.getAllUesrs();
-      taskController.getAllTasks();
-      taskController.getArchiveTask();
-      taskController.getDoneTask();
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => LanguageSelectionScreen()));
     });
