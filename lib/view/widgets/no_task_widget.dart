@@ -10,7 +10,7 @@ class NoTaskWidget extends StatelessWidget {
     return Center(
       child: Text(
         AppLocalizations.of(context)!.notasks,
-        style: TextStyle(color: Colors.grey, fontSize: 20),
+        style: const TextStyle(color: Colors.grey, fontSize: 20),
       ),
     );
   }

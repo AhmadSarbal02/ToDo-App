@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:todo/constant.dart';
+import 'package:todo/controller/login_controller.dart' show Logincontrollerr;
+import 'package:todo/controller/task_controller.dart';
 
 import 'package:todo/view/screens/login_screen.dart';
 import 'package:todo/view/widgets/custom_alert_dialog_widget.dart';
@@ -26,6 +29,17 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   ];
 
   @override
+  void initState() {
+    var taskController = Provider.of<TaskController>(context, listen: false);
+    var logincontroller = Provider.of<Logincontrollerr>(context, listen: false);
+    taskController.userModel = logincontroller.userModel!;
+    taskController.getAllTasks(userId: taskController.userModel!.id);
+    taskController.getArchiveTask(userId: taskController.userModel!.id);
+    taskController.getDoneTask(userId: taskController.userModel!.id);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //titles List
     List<String> titles = [
@@ -36,12 +50,13 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
     return Scaffold(
       drawer: Drawer(
+        backgroundColor: Constant.background,
         child: ListView(children: [
           DrawerHeader(
             padding: EdgeInsets.all(0),
             margin: EdgeInsets.all(0),
             child: Container(
-              color: const Color.fromARGB(255, 197, 171, 161),
+              decoration: BoxDecoration(gradient: Constant.gradient),
             ),
           ),
           ListTile(
@@ -65,45 +80,28 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
               setState(() {});
             },
           ),
-          ListTile(
+          const ListTile(
             leading: Icon(Icons.person),
             title: Text("About Me"),
             subtitle: Text("More info about developer team"),
           ),
         ]),
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          titles[currentIndex],
-          style: const TextStyle(color: Colors.white),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: Container(
+          decoration: BoxDecoration(gradient: Constant.gradient),
+          child: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: Text(
+              titles[currentIndex],
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
         ),
-
-        //Locale Change Button
-        actions: [
-          // EN Button
-          TextButton(
-              onPressed: () {
-                Provider.of<LocaleController>(context, listen: false)
-                    .changeLang(langCode: "en");
-              },
-              child: Text(
-                AppLocalizations.of(context)!.en,
-                style: const TextStyle(color: Colors.white),
-              )),
-          //AR Buttonn
-          TextButton(
-              onPressed: () {
-                Provider.of<LocaleController>(context, listen: false)
-                    .changeLang(langCode: "ar");
-              },
-              child: Text(
-                AppLocalizations.of(context)!.ar,
-                style: const TextStyle(color: Colors.white),
-              )),
-        ],
       ),
-
       body: screens[currentIndex],
 
       //BottomNavigationBar
@@ -114,8 +112,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             setState(() {});
           },
           currentIndex: currentIndex,
-          backgroundColor: Colors.white,
-          selectedItemColor: Colors.blue,
+          backgroundColor: const Color.fromARGB(255, 200, 211, 255),
+          selectedItemColor: const Color.fromARGB(255, 41, 79, 231),
+          selectedIconTheme: IconThemeData(
+            size: 30,
+          ),
           items: [
             BottomNavigationBarItem(
                 icon: const Icon(Icons.menu),
@@ -131,7 +132,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   }
 
   showSignUpDoneDialog(BuildContext context) async {
-    return showDialog(
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialogWidget(

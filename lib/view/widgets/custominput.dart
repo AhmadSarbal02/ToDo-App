@@ -40,20 +40,20 @@ class CustomTextField extends StatelessWidget {
           errorText: errorText,
           label: Text(
             lable!,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide:
-                BorderSide(color: const Color.fromARGB(255, 255, 255, 255)),
+                const BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide:
-                BorderSide(color: const Color.fromARGB(255, 255, 255, 255)),
+                const BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
             borderRadius: BorderRadius.circular(8),
           ),
           hintText: hintText!,
-          hintStyle: TextStyle(color: Colors.white),
+          hintStyle: const TextStyle(color: Colors.white),
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
         ),

@@ -22,20 +22,11 @@ class LoginPageScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60), // ارتفاع الـ AppBar
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.blue.shade300,
-                Colors.purple.shade400,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
+          decoration: BoxDecoration(gradient: Constant.gradient),
           child: AppBar(
             title: Text(
               AppLocalizations.of(context)!.login,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
@@ -137,9 +128,16 @@ class LoginPageScreen extends StatelessWidget {
                               },
                               checkColor: Colors.white,
                               activeColor: const Color(0xFF007bff),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2.0),
+                              ),
+                              side: WidgetStateBorderSide.resolveWith(
+                                (states) =>
+                                    BorderSide(width: 1.0, color: Colors.white),
+                              ),
                             ),
                             Text(AppLocalizations.of(context)!.rememberme,
-                                style: TextStyle(color: Colors.white)),
+                                style: const TextStyle(color: Colors.white)),
                           ],
                         ),
                       ),
@@ -196,19 +194,19 @@ class LoginPageScreen extends StatelessWidget {
                       ),
 
                       //Remove Data Button
-                      const SizedBox(height: 10),
-                      TextButton(
-                        onPressed: () {
-                          logincontrollerr.removeData();
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.removeuser,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                      // const SizedBox(height: 10),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     logincontrollerr.removeData();
+                      //   },
+                      //   child: Text(
+                      //     AppLocalizations.of(context)!.removeuser,
+                      //     style: const TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: 14,
+                      //         fontWeight: FontWeight.bold),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -221,7 +219,7 @@ class LoginPageScreen extends StatelessWidget {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.donthaveanaccount,
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    style: const TextStyle(color: Colors.black, fontSize: 16),
                   ),
 
                   //Sign Up Button
@@ -234,7 +232,7 @@ class LoginPageScreen extends StatelessWidget {
                     },
                     child: Text(
                       AppLocalizations.of(context)!.signup,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Color(0xFF007bff),
                           fontSize: 16,
                           fontWeight: FontWeight.bold),

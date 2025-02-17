@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/constant.dart';
 
 import '../../controller/task_controller.dart';
 import '../widgets/no_task_widget.dart';
@@ -11,7 +12,7 @@ class DoneTasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Constant.background,
       body: Consumer<TaskController>(builder: (context, taskController, child) {
         if (taskController.listDoneTasks.isEmpty) {
           return NoTaskWidget();

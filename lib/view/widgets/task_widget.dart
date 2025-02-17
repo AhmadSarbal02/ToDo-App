@@ -23,7 +23,7 @@ class TaskWidget extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.black26,
-              offset: Offset(4, 4),
+              offset: const Offset(4, 4),
               blurRadius: 8,
               spreadRadius: 1,
             ),
@@ -40,7 +40,7 @@ class TaskWidget extends StatelessWidget {
               Text(
                 taskModel.msg ?? "No message", // تأكد من أن الرسالة ليست null
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -52,7 +52,7 @@ class TaskWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.done,
                       size: 28,
                     ),
@@ -90,7 +90,7 @@ class TaskWidget extends StatelessWidget {
                     splashRadius: 24,
                   ),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete,
                       size: 28,
                     ),

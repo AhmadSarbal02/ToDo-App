@@ -15,7 +15,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(
@@ -24,9 +24,9 @@ class CustomButton extends StatelessWidget {
         elevation: 5,
       ),
       onPressed: onTap,
-      icon: Icon(icon, size: 24),
+      icon: Icon(icon, size: 24, color: const Color.fromARGB(255, 27, 67, 228)),
       label: Text(title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
     );
   }
 }

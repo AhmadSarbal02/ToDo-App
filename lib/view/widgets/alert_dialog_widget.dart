@@ -22,14 +22,14 @@ class CustomTaskDialog extends StatelessWidget {
       backgroundColor: Colors.blueGrey[800],
       title: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.add_task,
             color: Colors.blue,
           ),
           const SizedBox(width: 10),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.blue,
               fontSize: 20,
@@ -39,10 +39,10 @@ class CustomTaskDialog extends StatelessWidget {
       ),
       content: TextField(
         controller: controller,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context)!.entertask,
-          hintStyle: TextStyle(color: Colors.white),
+          hintStyle: const TextStyle(color: Colors.white),
           filled: true,
           fillColor: Colors.blueGrey[700],
           border: OutlineInputBorder(
@@ -53,7 +53,7 @@ class CustomTaskDialog extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: Colors.blue),
           ),
-          prefixIcon: Icon(Icons.edit, color: Colors.blue),
+          prefixIcon: const Icon(Icons.edit, color: Colors.blue),
         ),
       ),
       actions: [
@@ -63,7 +63,7 @@ class CustomTaskDialog extends StatelessWidget {
           },
           child: Text(
             AppLocalizations.of(context)!.cancel,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.redAccent,
               fontWeight: FontWeight.w600,
             ),

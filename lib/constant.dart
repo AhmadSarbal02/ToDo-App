@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 class Constant {
   static Gradient? gradient = LinearGradient(
-    colors: [Colors.blue.shade300, Colors.purple.shade400], // خلفية متدرجة
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+    colors: [
+      Colors.blue,
+      const Color.fromARGB(255, 27, 67, 228)
+    ], // خلفية متدرجة
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
   );
+  static Color background = const Color.fromARGB(255, 200, 211, 255);
 }

@@ -100,7 +100,7 @@ class Logincontrollerr extends ChangeNotifier {
   }
 
   showNotUserDialog(BuildContext context) async {
-    return showDialog(
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialogWidget(

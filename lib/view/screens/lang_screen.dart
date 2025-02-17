@@ -20,7 +20,7 @@ class LanguageSelectionScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               "Chosse Your Language",
               style: TextStyle(
                   fontSize: 22,

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/constant.dart';
 import 'package:todo/view/screens/login_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../controller/sign_up_controller.dart';
@@ -26,26 +27,19 @@ class SignUpScreen extends StatelessWidget {
         preferredSize: Size.fromHeight(60), // ارتفاع الـ AppBar
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.blue.shade300,
-                Colors.purple.shade400,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: Constant.gradient,
           ),
           child: AppBar(
             title: Text(
               AppLocalizations.of(context)!.signup,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
             backgroundColor:
-                Colors.transparent, // اجعل الخلفية شفافة ليظهر التدرج
+                Colors.transparent, // جعل الخلفية شفافة ليظهر التدرج
             elevation: 0,
           ),
         ),
@@ -56,17 +50,10 @@ class SignUpScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.blue.shade300,
-                      Colors.purple.shade400
-                    ], // خلفية متدرجة
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  gradient: Constant.gradient,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -127,9 +114,6 @@ class SignUpScreen extends StatelessWidget {
                           lable: AppLocalizations.of(context)!.email,
                           hintText:
                               AppLocalizations.of(context)!.enteryouremail,
-                          // errorText: signUpcontrollerr.isEmailText
-                          //     ? null
-                          //     : "Invalid Email",
                           obscureText: false,
                           maxLines: 1,
                         ),
@@ -172,9 +156,6 @@ class SignUpScreen extends StatelessWidget {
                             ),
                           ),
                           obscureText: signUpcontrollerr.obscureText,
-                          // errorText: signUpcontrollerr.isPassword
-                          //     ? null
-                          //     : "Empty Password",
                         ),
                       ),
                       SizedBox(height: 15),
@@ -208,7 +189,6 @@ class SignUpScreen extends StatelessWidget {
                               return AppLocalizations.of(context)!
                                   .enteryourpassword;
                             }
-                            //signUpcontrollerr.pass2controller!.text = val!;
 
                             if (!signUpcontrollerr.isSamePassword(
                                 passcontroller.text, val)) {
@@ -217,9 +197,6 @@ class SignUpScreen extends StatelessWidget {
                             }
                             return null;
                           },
-                          // errorText: signUpcontrollerr.isPassword
-                          //     ? null
-                          //     : "Empty Password",
                         ),
                       ),
                       SizedBox(height: 20),
@@ -277,7 +254,7 @@ class SignUpScreen extends StatelessWidget {
                     },
                     child: Text(
                       AppLocalizations.of(context)!.signin,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Color(0xFF007bff),
                           fontSize: 16,
                           fontWeight: FontWeight.bold),

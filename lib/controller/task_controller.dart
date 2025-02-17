@@ -20,7 +20,6 @@ class TaskController extends ChangeNotifier {
 
   getAllTasks({required int userId}) async {
     listTasks = [];
-    userId = userModel!.id;
     print(
         "============================= userModel in Task controller = ${userModel!.email}");
     print("============================= userId in Task controller = $userId");
@@ -83,7 +82,7 @@ class TaskController extends ChangeNotifier {
     } catch (e) {
       print("❌ خطأ أثناء إضافة المهمة: $e");
     }
-    getAllTasks(userId: userModel!.id);
+    await getAllTasks(userId: userModel!.id);
     notifyListeners();
   }
 
@@ -92,9 +91,9 @@ class TaskController extends ChangeNotifier {
     await sqfliteDb.updateData(
         sql:
             'Update task SET msg = "$msg" Where id =$id AND user_id = $userId');
-    getAllTasks(userId: userId);
-    getDoneTask(userId: userId);
-    getArchiveTask(userId: userId);
+    await getAllTasks(userId: userId);
+    await getDoneTask(userId: userId);
+    await getArchiveTask(userId: userId);
     notifyListeners();
   }
 
@@ -107,9 +106,9 @@ class TaskController extends ChangeNotifier {
     } catch (e) {
       print("====================== updateTaskToDone error = $e");
     }
-    getAllTasks(userId: userId);
-    getDoneTask(userId: userId);
-    getArchiveTask(userId: userId);
+    await getAllTasks(userId: userId);
+    await getDoneTask(userId: userId);
+    await getArchiveTask(userId: userId);
     notifyListeners();
   }
 
@@ -118,24 +117,24 @@ class TaskController extends ChangeNotifier {
     await sqfliteDb.updateData(
         sql:
             'UPDATE task SET archive = ${!archive ? 1 : 0}, done = 0 WHERE id = $id AND user_id = $userId');
-    getAllTasks(userId: userId);
-    getDoneTask(userId: userId);
-    getArchiveTask(userId: userId);
+    await getAllTasks(userId: userId);
+    await getDoneTask(userId: userId);
+    await getArchiveTask(userId: userId);
     notifyListeners();
   }
 
   deleteTask({required int id, required int userId}) async {
     await sqfliteDb.deleteData(
         sql: 'DELETE FROM task WHERE id = $id AND user_id = $userId');
-    getAllTasks(userId: userId);
-    getDoneTask(userId: userId);
-    getArchiveTask(userId: userId);
+    await getAllTasks(userId: userId);
+    await getDoneTask(userId: userId);
+    await getArchiveTask(userId: userId);
     notifyListeners();
   }
 
   showAddTaskDialog(BuildContext context) async {
     TextEditingController? controller = TextEditingController();
-    return showDialog(
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
         // استخدام السمة الحالية للتطبيق
